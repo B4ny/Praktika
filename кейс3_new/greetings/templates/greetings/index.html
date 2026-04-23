@@ -1,0 +1,37 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Приветствие</title>
+    <link rel="stylesheet" href="{% static 'greetings/css/style.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1>Добро пожаловать!</h1>
+
+        {% if greeting_name %}
+            <div class="greeting-box">
+                <p class="greeting-text">Привет, <strong>{{ greeting_name }}</strong>! Рады вас видеть!</p>
+                <a href="{% url 'index' %}" class="btn">Вернуться к форме</a>
+            </div>
+        {% else %}
+            <form method="post" class="greeting-form" novalidate>
+                {% csrf_token %}
+                <div class="form-group">
+                    {{ form.name.label_tag }}
+                    {{ form.name }}
+                </div>
+
+                {% if error_message %}
+                    <p class="error-message">{{ error_message }}</p>
+                {% endif %}
+
+                <button type="submit" class="btn">Submit</button>
+            </form>
+        {% endif %}
+    </div>
+</body>
+</html>
+
