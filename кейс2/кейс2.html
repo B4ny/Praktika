@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Счетчик</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .counter-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .result {
+            width: 150px;
+            height: 80px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 48px;
+            font-weight: bold;
+            color: white;
+            border-radius: 10px;
+            transition: background-color 0.3s ease;
+            background-color: red;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .buttons {
+            display: flex;
+            gap: 20px;
+        }
+
+        button {
+            width: 100px;
+            height: 60px;
+            font-size: 24px;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        button:hover:not(:disabled) {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: linear-gradient(135deg, #cccccc 0%, #999999 100%);
+        }
+
+        .extreme-message {
+            width: 300px;
+            height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border-radius: 10px;
+            visibility: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .extreme-message.show {
+            visibility: visible;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="counter-box">
+            <div class="result" id="result">0</div>
+            <div class="buttons">
+                <button id="minusBtn">−</button>
+                <button id="plusBtn">+</button>
+            </div>
+        </div>
+        <div class="extreme-message" id="extremeMessage">вы достигли экстремального значения</div>
+    </div>
+
+    <script>
+        let counter = 0;
+        const resultDisplay = document.getElementById('result');
+        const plusBtn = document.getElementById('plusBtn');
+        const minusBtn = document.getElementById('minusBtn');
+        const extremeMessage = document.getElementById('extremeMessage');
+
+        function updateDisplay() {
+            resultDisplay.textContent = counter;
+            updateResultColor();
+            updateButtonStates();
+            updateExtremeMessage();
+        }
+
+        function updateResultColor() {
+            if (counter > 0) {
+                resultDisplay.style.backgroundColor = 'yellow';
+                resultDisplay.style.color = 'black';
+            } else if (counter < 0) {
+                resultDisplay.style.backgroundColor = 'green';
+                resultDisplay.style.color = 'white';
+            } else {
+                resultDisplay.style.backgroundColor = 'red';
+                resultDisplay.style.color = 'white';
+            }
+        }
+
+        function updateButtonStates() {
+            if (counter >= 10) {
+                plusBtn.disabled = true;
+            } else {
+                plusBtn.disabled = false;
+            }
+
+            if (counter <= -10) {
+                minusBtn.disabled = true;
+            } else {
+                minusBtn.disabled = false;
+            }
+        }
+
+        function updateExtremeMessage() {
+            if (counter === 10 || counter === -10) {
+                extremeMessage.classList.add('show');
+            } else {
+                extremeMessage.classList.remove('show');
+            }
+        }
+
+        plusBtn.addEventListener('click', function() {
+            if (counter < 10) {
+                counter++;
+                updateDisplay();
+            }
+        });
+
+        minusBtn.addEventListener('click', function() {
+            if (counter > -10) {
+                counter--;
+                updateDisplay();
+            }
+        });
+
+        updateDisplay();
+    </script>
+</body>
+</html>
