@@ -178,22 +178,18 @@
     </div>
 
     <script>
-        // Функция сложения
         function sum(a, b) {
             return a + b;
         }
 
-        // Функция вычитания
         function diff(a, b) {
             return a - b;
         }
 
-        // Функция умножения
         function prod(a, b) {
             return a * b;
         }
 
-        // Функция деления
         function div(a, b) {
             if (b === 0) {
                 throw new Error("Деление на ноль невозможно");
@@ -201,13 +197,11 @@
             return a / b;
         }
 
-        // Функция проверки, является ли значение числом
         function isValidNumber(value) {
             if (value.trim() === '') return false;
             return !isNaN(value) && isFinite(value);
         }
 
-        // Основная функция расчета
         function calculate(operation) {
             const num1Input = document.getElementById('num1');
             const num2Input = document.getElementById('num2');
@@ -216,7 +210,6 @@
             const val1 = num1Input.value;
             const val2 = num2Input.value;
 
-            // Проверка на ввод нецифровых значений
             if (!isValidNumber(val1) || !isValidNumber(val2)) {
                 resultElement.textContent = 'Ошибка: введите корректные числа!';
                 resultElement.className = 'result-value error';
@@ -245,7 +238,6 @@
                         throw new Error('Неизвестная операция');
                 }
 
-                // Форматирование результата (убираем лишние нули)
                 resultElement.textContent = parseFloat(result.toFixed(10));
                 resultElement.className = 'result-value success';
             } catch (error) {

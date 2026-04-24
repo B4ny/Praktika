@@ -7,33 +7,22 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-
-    <!-- Three.js WebGL canvas (background) -->
     <div id="canvas-container"></div>
-
-    <!-- UI overlays -->
     <div class="progress-bar" id="progressBar"></div>
     <div class="fade-top"></div>
     <div class="fade-bottom"></div>
     <div class="scroll-indicator" id="scrollIndicator">Прокручивайте вниз</div>
-
-    <!-- Invisible scroll spacer -->
     <div class="scroll-spacer" id="scrollSpacer"></div>
-
-    <!-- Fixed text crawl overlay -->
     <div class="crawl-container" id="crawlContainer">
         <div class="crawl-content" id="crawlContent">
-            
             <div class="logo" id="intro">
                 <h1>Кейс №5</h1>
                 <div class="subtitle">Аналитический обзор</div>
             </div>
-
             <div class="episode" id="episode">
                 <div class="episode-number">Эпизод III</div>
                 <div class="episode-title">Анализ проекта Django</div>
             </div>
-
             <div class="crawl-text">
                 <p>
                     Кейс №3 представляет собой веб-приложение на Django для приветствия пользователя по имени. 
@@ -44,7 +33,6 @@
                     Настало время провести детальный анализ проделанной работы по девяти ключевым критериям 
                     качества программного обеспечения и предложить пути улучшения...
                 </p>
-
                 <div class="crawl-section" id="section-1">
                     <h2>1. Функциональность</h2>
                     <p><strong>Что реализовано:</strong></p>
@@ -66,7 +54,6 @@ class Name(models.Model):
     name = models.CharField(max_length=100, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)</div>
                 </div>
-
                 <div class="crawl-section" id="section-2">
                     <h2>2. Производительность</h2>
                     <p><strong>Что хорошо:</strong></p>
@@ -86,7 +73,6 @@ paginator = Paginator(Name.objects.all(), 20)
 page = request.GET.get('page')
 names = paginator.get_page(page)</div>
                 </div>
-
                 <div class="crawl-section" id="section-3">
                     <h2>3. Удобство использования</h2>
                     <p><strong>Что хорошо:</strong></p>
@@ -102,7 +88,6 @@ names = paginator.get_page(page)</div>
                         <li>Отсутствие счётчика посещений/имён</li>
                     </ul>
                 </div>
-
                 <div class="crawl-section" id="section-4">
                     <h2>4. Безопасность</h2>
                     <p><strong>Что хорошо:</strong></p>
@@ -123,7 +108,6 @@ names = paginator.get_page(page)</div>
 DEBUG = os.environ.get('DJANGO_DEBUG', 'False') == 'True'
 ALLOWED_HOSTS = ['yourdomain.com', 'localhost']</div>
                 </div>
-
                 <div class="crawl-section" id="section-5">
                     <h2>5. Масштабируемость</h2>
                     <p><strong>Что хорошо:</strong></p>
@@ -148,7 +132,6 @@ DATABASES = {
     }
 }</div>
                 </div>
-
                 <div class="crawl-section" id="section-6">
                     <h2>6. Сопровождаемость</h2>
                     <p><strong>Что хорошо:</strong></p>
@@ -165,7 +148,6 @@ DATABASES = {
                         <li>Нет CI/CD конфигурации</li>
                     </ul>
                 </div>
-
                 <div class="crawl-section" id="section-7">
                     <h2>7. Переносимость</h2>
                     <p><strong>Что хорошо:</strong></p>
@@ -180,7 +162,6 @@ DATABASES = {
                         <li>Нет CI/CD для тестирования на разных платформах</li>
                     </ul>
                 </div>
-
                 <div class="crawl-section" id="section-8">
                     <h2>8. Качество кода</h2>
                     <p><strong>Что хорошо:</strong></p>
@@ -197,7 +178,6 @@ DATABASES = {
                         <li>Нет обработки исключений</li>
                     </ul>
                 </div>
-
                 <div class="crawl-section" id="section-9">
                     <h2>9. Тестирование</h2>
                     <p><strong class="priority-critical">Критические проблемы:</strong></p>
@@ -216,7 +196,6 @@ DATABASES = {
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Привет, Иван!')</div>
                 </div>
-
                 <div class="crawl-section" id="score-table">
                     <h2>Сводная таблица оценок</h2>
                     <table class="score-table">
@@ -277,7 +256,6 @@ DATABASES = {
                         </tr>
                     </table>
                 </div>
-
                 <div class="crawl-section" id="recommendations">
                     <h2>Приоритетные рекомендации</h2>
                     <h3 class="priority-critical">🔴 Критический приоритет</h3>
@@ -300,7 +278,6 @@ DATABASES = {
                         <li>Настроить Redis для кэширования</li>
                     </ul>
                 </div>
-
                 <div class="crawl-section" id="conclusion">
                     <h2>Заключение</h2>
                     <p>
@@ -318,11 +295,9 @@ DATABASES = {
                         <strong>КОНЕЦ</strong>
                     </p>
                 </div>
-            </div><!-- /crawl-text -->
-        </div><!-- /crawl-content -->
-    </div><!-- /crawl-container -->
-
-    <!-- Navigation -->
+            </div>
+        </div>
+    </div>
     <nav class="side-nav" id="sideNav">
         <div class="nav-toggle" id="navToggle" title="Навигация">☰</div>
         <ul class="nav-list">
@@ -341,8 +316,6 @@ DATABASES = {
             <li><a href="#" data-section="conclusion">Заключение</a></li>
         </ul>
     </nav>
-
-    <!-- Three.js from CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="js/main.js"></script>
 </body>

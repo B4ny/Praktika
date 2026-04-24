@@ -1,7 +1,3 @@
-// ============================================
-// THREE.JS STARFIELD BACKGROUND
-// ============================================
-
 let scene, camera, renderer, stars, starGeo;
 
 function initThree() {
@@ -58,7 +54,6 @@ function createStarField() {
     stars = new THREE.Points(starGeo, starMaterial);
     scene.add(stars);
 
-    // Second layer — colored stars
     const coloredPositions = new Float32Array(5000 * 3);
     for (let i = 0; i < 5000; i++) {
         coloredPositions[i * 3] = (Math.random() - 0.5) * 3000;
@@ -123,23 +118,16 @@ function onWindowResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-// ============================================
-// SCROLL-DRIVEN TEXT ANIMATION
-// ============================================
-
 function setSpacerHeight() {
     const content = document.getElementById('crawlContent');
     const spacer = document.getElementById('scrollSpacer');
     if (!content || !spacer) return;
 
-    // Measure natural height (without transforms)
     const saved = content.style.cssText;
     content.style.cssText = 'position: absolute; visibility: hidden; transform: none; opacity: 1;';
     const h = content.scrollHeight;
     content.style.cssText = saved;
 
-    // spacer высота = высота контента минус часть viewport,
-    // чтобы при maxScroll нижний край текста оставался в видимой области
     const visibleBuffer = window.innerHeight * 0.6;
     spacer.style.height = Math.max(h - visibleBuffer, 1) + 'px';
 }
@@ -156,10 +144,8 @@ function handleScroll() {
     const t = Math.min(window.scrollY / maxScroll, 1);
     scrollProgress = t;
 
-    // Progress bar
     if (progressBar) progressBar.style.width = (t * 100) + '%';
 
-    // Hide scroll indicator via CSS class when reaching the end of scroll
     if (scrollIndicator) {
         if (t >= 0.99) {
             scrollIndicator.classList.add('hidden');
@@ -168,27 +154,13 @@ function handleScroll() {
         }
     }
 
-    // === SIMPLE SCROLL: only translateY, NO scale, NO rotateX, NO perspective ===
-    // The visual tilt comes from CSS skewY(-4deg) on .crawl-content
-    // Text size NEVER changes — it just moves straight up
-
     const contentH = crawlContent.scrollHeight;
-
-    // Start: text top is at 10% of viewport — text appears near top of screen
     const startY = window.innerHeight * 0.10;
-
-    // End: нижний край контента остаётся в нижней части viewport,
-    // чтобы текст "КОНЕЦ" не улетал за верхний край при полной прокрутке
     const endY = -(contentH - window.innerHeight * 0.6);
-
-    // Current Y position
     const currentY = startY + (endY - startY) * t;
 
-    // Apply: translateX(-50%) is already in CSS, we only change translateY
     crawlContent.style.transform =
         'translateX(-50%) translateY(' + currentY + 'px) skewY(-4deg)';
-
-    // Текст остаётся полностью видимым на всём протяжении прокрутки
     crawlContent.style.opacity = '1';
 
     updateActiveNav(t);
@@ -206,14 +178,10 @@ function updateActiveNav(t) {
     const startY = window.innerHeight * 0.10;
     const viewportCenter = window.innerHeight * 0.35;
 
-    // Current text Y position
     const endY = -(contentH - window.innerHeight * 0.6);
     const currentY = startY + (endY - startY) * t;
-
-    // What content Y is at viewport center?
     const contentYAtCenter = viewportCenter - currentY;
 
-    // Find section whose offsetTop is closest to contentYAtCenter
     let closestIdx = 0;
     let closestDist = Infinity;
     sections.forEach(function(sec, i) {
@@ -230,10 +198,6 @@ function updateActiveNav(t) {
         link.classList.toggle('active', link.getAttribute('data-section') === id);
     });
 }
-
-// ============================================
-// NAVIGATION
-// ============================================
 
 function initNavigation() {
     const sideNav = document.getElementById('sideNav');
@@ -266,16 +230,11 @@ function scrollToSection(sectionId) {
     const spacer = document.getElementById('scrollSpacer');
     if (!section || !crawlContent || !spacer) return;
 
-    // Section's position within crawlContent (pixels from top of content)
     const sectionTop = section.offsetTop;
     const contentH = crawlContent.scrollHeight;
     const startY = window.innerHeight * 0.10;
     const viewportCenter = window.innerHeight * 0.35;
 
-    // We want: currentY + sectionTop ≈ viewportCenter
-    // currentY = startY + (endY - startY) * t, where endY = -(contentH - window.innerHeight * 0.6)
-    // startY + (-(contentH - window.innerHeight * 0.6) - startY) * t + sectionTop = viewportCenter
-    // t = (startY + sectionTop - viewportCenter) / (contentH - window.innerHeight * 0.6 + startY)
     let t = (startY + sectionTop - viewportCenter) / (contentH - window.innerHeight * 0.6 + startY);
     t = Math.max(0, Math.min(1, t));
 
@@ -284,10 +243,6 @@ function scrollToSection(sectionId) {
 
     window.scrollTo({ top: target, behavior: 'smooth' });
 }
-
-// ============================================
-// INITIALIZATION
-// ============================================
 
 document.addEventListener('DOMContentLoaded', function() {
     initThree();
@@ -316,3 +271,4 @@ window.addEventListener('resize', function() {
     setSpacerHeight();
     handleScroll();
 });
+

@@ -10,7 +10,6 @@ html, body {
     overflow-x: hidden;
 }
 
-/* ===== BACKGROUND ===== */
 #canvas-container {
     position: fixed;
     top: 0; left: 0;
@@ -22,13 +21,11 @@ html, body {
     display: block;
 }
 
-/* ===== SCROLL SPACER ===== */
 .scroll-spacer {
     position: relative;
     z-index: 1;
 }
 
-/* ===== CRAWL CONTAINER ===== */
 .crawl-container {
     position: fixed;
     top: 0; left: 0;
@@ -45,13 +42,11 @@ html, body {
     width: 100%;
     max-width: 850px;
     padding: 0 40px;
-    /* Light 2D tilt — NO perspective, NO rotateX, NO scale */
     transform: translateX(-50%) skewY(-4deg);
     transform-origin: center center;
     will-change: transform;
 }
 
-/* ===== CONTENT STYLES ===== */
 .logo {
     text-align: center;
     margin-bottom: 80px;
@@ -193,7 +188,6 @@ html, body {
     text-shadow: 0 0 5px rgba(0,255,136,0.2);
 }
 
-/* ===== UI OVERLAYS ===== */
 .progress-bar {
     position: fixed;
     top: 0; left: 0;
@@ -254,7 +248,6 @@ html, body {
     50% { opacity: 1; transform: translateX(-50%) translateY(12px); }
 }
 
-/* ===== NAVIGATION ===== */
 .side-nav {
     position: fixed;
     top: 50%; right: 0;
@@ -346,7 +339,6 @@ html, body {
     font-weight: 700;
 }
 
-/* Nav section indicators */
 .nav-list a::before {
     content: '';
     display: inline-block;
@@ -367,7 +359,6 @@ html, body {
     box-shadow: 0 0 10px rgba(255,232,31,0.8);
 }
 
-/* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
     .crawl-content { padding: 0 25px; max-width: 100%; }
     .logo h1 { font-size: 3.2rem; letter-spacing: 6px; }
@@ -377,3 +368,4 @@ html, body {
     .score-table { font-size: 1.2rem; }
     .code-block { font-size: 1rem; }
 }
+
