@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Кейс №5 — Аналитический обзор</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Three.js WebGL canvas (background) -->
+    <div id="canvas-container"></div>
+
+    <!-- UI overlays -->
+    <div class="progress-bar" id="progressBar"></div>
+    <div class="fade-top"></div>
+    <div class="fade-bottom"></div>
+    <div class="scroll-indicator" id="scrollIndicator">Прокручивайте вниз</div>
+
+    <!-- Invisible scroll spacer -->
+    <div class="scroll-spacer" id="scrollSpacer"></div>
+
+    <!-- Fixed text crawl overlay -->
+    <div class="crawl-container" id="crawlContainer">
+        <div class="crawl-content" id="crawlContent">
+            
+            <div class="logo" id="intro">
+                <h1>Кейс №5</h1>
+                <div class="subtitle">Аналитический обзор</div>
+            </div>
+
+            <div class="episode" id="episode">
+                <div class="episode-number">Эпизод III</div>
+                <div class="episode-title">Анализ проекта Django</div>
+            </div>
+
+            <div class="crawl-text">
+                <p>
+                    Кейс №3 представляет собой веб-приложение на Django для приветствия пользователя по имени. 
+                    Проект состоит из Django-проекта «кейс3_new», приложения «greetings» с моделью Name, 
+                    формой NameForm, представлением index, HTML-шаблона с CSS-стилизацией и базы данных SQLite.
+                </p>
+                <p>
+                    Настало время провести детальный анализ проделанной работы по девяти ключевым критериям 
+                    качества программного обеспечения и предложить пути улучшения...
+                </p>
+
+                <div class="crawl-section" id="section-1">
+                    <h2>1. Функциональность</h2>
+                    <p><strong>Что реализовано:</strong></p>
+                    <ul>
+                        <li>Форма для ввода имени пользователя</li>
+                        <li>Сохранение введённых имён в базу данных</li>
+                        <li>Отображение персонализированного приветствия</li>
+                        <li>Валидация на пустое поле и CSRF-защита</li>
+                        <li>Админ-панель Django для управления записями</li>
+                    </ul>
+                    <p><strong class="priority-critical">Проблемы:</strong></p>
+                    <ul>
+                        <li>Отсутствие уникальности имён — дубли в БД</li>
+                        <li>Нет отображения истории введённых имён</li>
+                        <li>Ограниченная функциональность — только одна операция</li>
+                    </ul>
+                    <div class="code-block"># models.py — добавить уникальность
+class Name(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)</div>
+                </div>
+
+                <div class="crawl-section" id="section-2">
+                    <h2>2. Производительность</h2>
+                    <p><strong>Что хорошо:</strong></p>
+                    <ul>
+                        <li>Использование индексов SQLite</li>
+                        <li>Минимальное количество запросов к БД</li>
+                        <li>Лёгкий CSS без тяжёлых изображений</li>
+                    </ul>
+                    <p><strong class="priority-high">Проблемы:</strong></p>
+                    <ul>
+                        <li>Рост таблицы без ограничений — замедление запросов</li>
+                        <li>Отсутствие пагинации</li>
+                        <li>DEBUG=True в production сильно замедляет работу</li>
+                    </ul>
+                    <div class="code-block">from django.core.paginator import Paginator
+paginator = Paginator(Name.objects.all(), 20)
+page = request.GET.get('page')
+names = paginator.get_page(page)</div>
+                </div>
+
+                <div class="crawl-section" id="section-3">
+                    <h2>3. Удобство использования</h2>
+                    <p><strong>Что хорошо:</strong></p>
+                    <ul>
+                        <li>Адаптивный дизайн с CSS Flexbox</li>
+                        <li>Приятная цветовая гамма и градиентный фон</li>
+                        <li>Hover-эффекты и фокус-стили</li>
+                    </ul>
+                    <p><strong class="priority-high">Проблемы:</strong></p>
+                    <ul>
+                        <li>Кнопка «Submit» на английском — несоответствие интерфейсу</li>
+                        <li>Нет подтверждения успешного сохранения</li>
+                        <li>Отсутствие счётчика посещений/имён</li>
+                    </ul>
+                </div>
+
+                <div class="crawl-section" id="section-4">
+                    <h2>4. Безопасность</h2>
+                    <p><strong>Что хорошо:</strong></p>
+                    <ul>
+                        <li>CSRF-защита включена</li>
+                        <li>Django-шаблонизатор экранирует вывод (XSS-защита)</li>
+                        <li>XFrameOptionsMiddleware и SecurityMiddleware подключены</li>
+                    </ul>
+                    <p><strong class="priority-critical">Критические проблемы:</strong></p>
+                    <ul>
+                        <li>SECRET_KEY захардкожен — серьёзная уязвимость</li>
+                        <li>DEBUG=True — раскрывает детали ошибок</li>
+                        <li>ALLOWED_HOSTS пустой — уязвимость для Host header attacks</li>
+                        <li>Нет rate limiting — возможен DoS</li>
+                        <li>Пароль админа admin123 — легко подбирается</li>
+                    </ul>
+                    <div class="code-block">SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
+DEBUG = os.environ.get('DJANGO_DEBUG', 'False') == 'True'
+ALLOWED_HOSTS = ['yourdomain.com', 'localhost']</div>
+                </div>
+
+                <div class="crawl-section" id="section-5">
+                    <h2>5. Масштабируемость</h2>
+                    <p><strong>Что хорошо:</strong></p>
+                    <ul>
+                        <li>Стандартная архитектура Django (MTV)</li>
+                        <li>Разделение на приложения</li>
+                        <li>Модельная структура БД легко расширяется</li>
+                    </ul>
+                    <p><strong class="priority-high">Проблемы:</strong></p>
+                    <ul>
+                        <li>SQLite — не подходит для высоких нагрузок</li>
+                        <li>Отсутствие кэширования</li>
+                        <li>Нет CDN для статических файлов</li>
+                        <li>Монолитная архитектура</li>
+                    </ul>
+                    <div class="code-block"># Переход на PostgreSQL
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('DB_NAME'),
+        # ...
+    }
+}</div>
+                </div>
+
+                <div class="crawl-section" id="section-6">
+                    <h2>6. Сопровождаемость</h2>
+                    <p><strong>Что хорошо:</strong></p>
+                    <ul>
+                        <li>Чистая структура Django-проекта</li>
+                        <li>Использование стандартных паттернов</li>
+                        <li>CSS вынесен в отдельный файл</li>
+                    </ul>
+                    <p><strong class="priority-high">Проблемы:</strong></p>
+                    <ul>
+                        <li>Нет requirements.txt — неизвестны версии библиотек</li>
+                        <li>Нет docstrings и комментариев</li>
+                        <li>Нет .gitignore</li>
+                        <li>Нет CI/CD конфигурации</li>
+                    </ul>
+                </div>
+
+                <div class="crawl-section" id="section-7">
+                    <h2>7. Переносимость</h2>
+                    <p><strong>Что хорошо:</strong></p>
+                    <ul>
+                        <li>Стандартный Django — работает на любой ОС</li>
+                        <li>Использование pathlib.Path</li>
+                    </ul>
+                    <p><strong class="priority-medium">Проблемы:</strong></p>
+                    <ul>
+                        <li>Хардкод путей — нет env-конфигурации</li>
+                        <li>Нет Docker-контейнеризации</li>
+                        <li>Нет CI/CD для тестирования на разных платформах</li>
+                    </ul>
+                </div>
+
+                <div class="crawl-section" id="section-8">
+                    <h2>8. Качество кода</h2>
+                    <p><strong>Что хорошо:</strong></p>
+                    <ul>
+                        <li>Соблюдение PEP 8</li>
+                        <li>Читаемые имена переменных</li>
+                        <li>Корректное разделение ответственности</li>
+                    </ul>
+                    <p><strong class="priority-high">Проблемы:</strong></p>
+                    <ul>
+                        <li>Пустой tests.py — нет тестов вообще</li>
+                        <li>Нет type hints</li>
+                        <li>Валидация в представлении вместо формы</li>
+                        <li>Нет обработки исключений</li>
+                    </ul>
+                </div>
+
+                <div class="crawl-section" id="section-9">
+                    <h2>9. Тестирование</h2>
+                    <p><strong class="priority-critical">Критические проблемы:</strong></p>
+                    <ul>
+                        <li>Полное отсутствие тестов — критическая проблема</li>
+                        <li>Нет unit-тестов, интеграционных тестов</li>
+                        <li>Нет тестов на валидацию и безопасность</li>
+                        <li>Нет нагрузочного тестирования</li>
+                        <li>Нет coverage-анализа</li>
+                    </ul>
+                    <div class="code-block">class IndexViewTest(TestCase):
+    def test_post_valid_name(self):
+        response = self.client.post(
+            reverse('index'), {'name': 'Иван'}
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Привет, Иван!')</div>
+                </div>
+
+                <div class="crawl-section" id="score-table">
+                    <h2>Сводная таблица оценок</h2>
+                    <table class="score-table">
+                        <tr>
+                            <th>Критерий</th>
+                            <th>Оценка</th>
+                            <th>Комментарий</th>
+                        </tr>
+                        <tr>
+                            <td>Функциональность</td>
+                            <td class="score-highlight">6/10</td>
+                            <td>Работает, но много упущенных возможностей</td>
+                        </tr>
+                        <tr>
+                            <td>Производительность</td>
+                            <td class="score-highlight">6/10</td>
+                            <td>Нет оптимизаций для роста нагрузки</td>
+                        </tr>
+                        <tr>
+                            <td>Юзабилити</td>
+                            <td class="score-highlight">7/10</td>
+                            <td>Приятный UI, есть недочёты локализации</td>
+                        </tr>
+                        <tr>
+                            <td>Безопасность</td>
+                            <td class="score-highlight priority-critical">4/10</td>
+                            <td>Критические уязвимости!</td>
+                        </tr>
+                        <tr>
+                            <td>Масштабируемость</td>
+                            <td class="score-highlight">5/10</td>
+                            <td>Архитектура позволяет, но нет решений</td>
+                        </tr>
+                        <tr>
+                            <td>Сопровождаемость</td>
+                            <td class="score-highlight">5/10</td>
+                            <td>Нет документации и тестов</td>
+                        </tr>
+                        <tr>
+                            <td>Переносимость</td>
+                            <td class="score-highlight">6/10</td>
+                            <td>Нет Docker и env-конфигурации</td>
+                        </tr>
+                        <tr>
+                            <td>Качество кода</td>
+                            <td class="score-highlight">6/10</td>
+                            <td>Нет type hints, тестов, обработки ошибок</td>
+                        </tr>
+                        <tr>
+                            <td>Тестирование</td>
+                            <td class="score-highlight priority-critical">1/10</td>
+                            <td>Полное отсутствие тестов</td>
+                        </tr>
+                        <tr style="border-top: 3px solid #ffe81f;">
+                            <td><strong>ИТОГО</strong></td>
+                            <td class="score-highlight"><strong>5.1/10</strong></td>
+                            <td><strong>Требуется значительная доработка</strong></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="crawl-section" id="recommendations">
+                    <h2>Приоритетные рекомендации</h2>
+                    <h3 class="priority-critical">🔴 Критический приоритет</h3>
+                    <ul>
+                        <li>Вынести SECRET_KEY в переменные окружения</li>
+                        <li>Установить DEBUG=False для production</li>
+                        <li>Заполнить ALLOWED_HOSTS</li>
+                        <li>Добавить базовые unit-тесты</li>
+                    </ul>
+                    <h3 class="priority-high">🟡 Высокий приоритет</h3>
+                    <ul>
+                        <li>Добавить валидацию в формы</li>
+                        <li>Сделать имена уникальными</li>
+                        <li>Добавить requirements.txt и .gitignore</li>
+                    </ul>
+                    <h3 class="priority-medium">🟢 Средний приоритет</h3>
+                    <ul>
+                        <li>Создать Dockerfile</li>
+                        <li>Перейти на PostgreSQL</li>
+                        <li>Настроить Redis для кэширования</li>
+                    </ul>
+                </div>
+
+                <div class="crawl-section" id="conclusion">
+                    <h2>Заключение</h2>
+                    <p>
+                        Проект Кейса №3 демонстрирует базовые навыки работы с Django. Приложение 
+                        выполняет свою основную функцию — приветствие пользователя по имени. Однако 
+                        проект находится на начальном уровне развития и требует значительной доработки 
+                        по всем критериям, особенно в области безопасности, тестирования и подготовки 
+                        к production-развёртыванию.
+                    </p>
+                    <p>
+                        Реализация предложенных улучшений превратит простое учебное приложение в 
+                        production-ready проект, соответствующий современным стандартам веб-разработки.
+                    </p>
+                    <p style="text-align: center; margin-top: 120px; font-size: 3rem; color: #fff;">
+                        <strong>КОНЕЦ</strong>
+                    </p>
+                </div>
+            </div><!-- /crawl-text -->
+        </div><!-- /crawl-content -->
+    </div><!-- /crawl-container -->
+
+    <!-- Navigation -->
+    <nav class="side-nav" id="sideNav">
+        <div class="nav-toggle" id="navToggle" title="Навигация">☰</div>
+        <ul class="nav-list">
+            <li><a href="#" data-section="episode">Введение</a></li>
+            <li><a href="#" data-section="section-1">1. Функциональность</a></li>
+            <li><a href="#" data-section="section-2">2. Производительность</a></li>
+            <li><a href="#" data-section="section-3">3. Удобство использования</a></li>
+            <li><a href="#" data-section="section-4">4. Безопасность</a></li>
+            <li><a href="#" data-section="section-5">5. Масштабируемость</a></li>
+            <li><a href="#" data-section="section-6">6. Сопровождаемость</a></li>
+            <li><a href="#" data-section="section-7">7. Переносимость</a></li>
+            <li><a href="#" data-section="section-8">8. Качество кода</a></li>
+            <li><a href="#" data-section="section-9">9. Тестирование</a></li>
+            <li><a href="#" data-section="score-table">Оценки</a></li>
+            <li><a href="#" data-section="recommendations">Рекомендации</a></li>
+            <li><a href="#" data-section="conclusion">Заключение</a></li>
+        </ul>
+    </nav>
+
+    <!-- Three.js from CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
+
