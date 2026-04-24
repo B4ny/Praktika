@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Калькулятор — Кейс 4</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .calculator-container {
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+
+        .inputs-section {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            justify-content: center;
+        }
+
+        .input-group {
+            flex: 1;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            text-align: center;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .buttons-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        button {
+            padding: 15px 20px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            color: white;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .btn-sum {
+            background: linear-gradient(135deg, #11998e, #38ef7d);
+        }
+
+        .btn-diff {
+            background: linear-gradient(135deg, #fc4a1a, #f7b733);
+        }
+
+        .btn-prod {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        .btn-div {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+        }
+
+        .result-section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            border: 2px dashed #dee2e6;
+        }
+
+        .result-label {
+            color: #888;
+            font-size: 14px;
+            margin-bottom: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .result-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: #333;
+            min-height: 40px;
+            word-break: break-all;
+        }
+
+        .result-value.error {
+            color: #e74c3c;
+            font-size: 18px;
+        }
+
+        .result-value.success {
+            color: #27ae60;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator-container">
+        <h1>🧮 Калькулятор</h1>
+        
+        <div class="inputs-section">
+            <div class="input-group">
+                <label for="num1">Число 1</label>
+                <input type="text" id="num1" placeholder="Введите число">
+            </div>
+            <div class="input-group">
+                <label for="num2">Число 2</label>
+                <input type="text" id="num2" placeholder="Введите число">
+            </div>
+        </div>
+
+        <div class="buttons-section">
+            <button class="btn-sum" onclick="calculate('sum')">Сумма</button>
+            <button class="btn-diff" onclick="calculate('diff')">Разность</button>
+            <button class="btn-prod" onclick="calculate('prod')">Произведение</button>
+            <button class="btn-div" onclick="calculate('div')">Деление</button>
+        </div>
+
+        <div class="result-section">
+            <div class="result-label">Результат</div>
+            <div class="result-value" id="result">—</div>
+        </div>
+    </div>
+
+    <script>
+        // Функция сложения
+        function sum(a, b) {
+            return a + b;
+        }
+
+        // Функция вычитания
+        function diff(a, b) {
+            return a - b;
+        }
+
+        // Функция умножения
+        function prod(a, b) {
+            return a * b;
+        }
+
+        // Функция деления
+        function div(a, b) {
+            if (b === 0) {
+                throw new Error("Деление на ноль невозможно");
+            }
+            return a / b;
+        }
+
+        // Функция проверки, является ли значение числом
+        function isValidNumber(value) {
+            if (value.trim() === '') return false;
+            return !isNaN(value) && isFinite(value);
+        }
+
+        // Основная функция расчета
+        function calculate(operation) {
+            const num1Input = document.getElementById('num1');
+            const num2Input = document.getElementById('num2');
+            const resultElement = document.getElementById('result');
+
+            const val1 = num1Input.value;
+            const val2 = num2Input.value;
+
+            // Проверка на ввод нецифровых значений
+            if (!isValidNumber(val1) || !isValidNumber(val2)) {
+                resultElement.textContent = 'Ошибка: введите корректные числа!';
+                resultElement.className = 'result-value error';
+                return;
+            }
+
+            const num1 = parseFloat(val1);
+            const num2 = parseFloat(val2);
+            let result;
+
+            try {
+                switch (operation) {
+                    case 'sum':
+                        result = sum(num1, num2);
+                        break;
+                    case 'diff':
+                        result = diff(num1, num2);
+                        break;
+                    case 'prod':
+                        result = prod(num1, num2);
+                        break;
+                    case 'div':
+                        result = div(num1, num2);
+                        break;
+                    default:
+                        throw new Error('Неизвестная операция');
+                }
+
+                // Форматирование результата (убираем лишние нули)
+                resultElement.textContent = parseFloat(result.toFixed(10));
+                resultElement.className = 'result-value success';
+            } catch (error) {
+                resultElement.textContent = 'Ошибка: ' + error.message;
+                resultElement.className = 'result-value error';
+            }
+        }
+    </script>
+</body>
+</html>
+
